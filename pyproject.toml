@@ -1,0 +1,52 @@
+[tool.poetry]
+name = "discord-jokes"
+version = "0.1.0"
+description = "Discord Bot that sends a random Dad Joke when asked."
+authors = ["Gordon Shankman <mr.burrito@shankyank.com>"]
+readme = "README.md"
+
+# These tasks can be run with `poetry run poe <task> ARGS...`
+[tool.poe.tasks]
+test = "pytest"
+_isort = "isort ."
+_black = "black ."
+pylint = "pylint discord_jokes"
+mypy = "mypy"
+format = ["_isort", "_black"]
+lint = ["format", "pylint", "mypy"]
+isort_ci = "isort --check ."
+black_ci = "black --check ."
+lint_ci.sequence = ["isort_ci", "black_ci", "pylint", "mypy"]
+lint_ci.ignore_fail = "return_non_zero"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+discord-py = "^2.3.2"
+python-dotenv = "^1.0.1"
+
+[tool.poetry.group.dev.dependencies]
+poethepoet = "^0.25.0"
+black = "^24.3.0"
+mypy = "^1.9.0"
+pylint = "^3.1.0"
+pytest = "^8.1.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = "-ra -q"
+testpaths = ["test"]
+filterwarnings = [
+    "ignore::DeprecationWarning:faiss.*:",
+    "ignore::DeprecationWarning:setuptools.*:",
+]
+
+[tool.isort]
+profile = "black"
+extend_skip_glob = "vendor/**"
+
+[tool.black]
+extend-exclude = "vendor/.*"
