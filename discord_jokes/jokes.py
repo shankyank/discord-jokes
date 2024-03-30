@@ -1,7 +1,7 @@
-from typing import Any, Optional, TypedDict
-import requests
 import logging
-import random
+from typing import TypedDict
+
+import requests
 
 logger = logging.getLogger(__name__)
 
@@ -20,7 +20,7 @@ Joke = TypedDict(
 def random_joke() -> Joke:
     try:
         headers = {"User-Agent": USER_AGENT, "Accept": "application/json"}
-        response = requests.get(JOKE_API, headers=headers)
+        response = requests.get(JOKE_API, headers=headers, timeout=5)
         response.raise_for_status()
         return response.json()
     except Exception as err:
